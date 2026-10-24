@@ -1,0 +1,88 @@
+@prefix : <http://www.semanticweb.org/patient_monitoring#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://www.semanticweb.org/patient_monitoring/data_v3> a owl:Ontology ;
+    owl:imports <http://www.semanticweb.org/patient_monitoring> .
+
+### Індивіди
+:patient_01 a owl:NamedIndividual , :Patient ;
+    :hasFeedback :fb_01 ;
+    :isMonitoredBy :dev_pulse_ox_01 .
+
+:patient_02 a owl:NamedIndividual , :Patient ;
+    :hasFeedback :fb_02 .
+
+:patient_03 a owl:NamedIndividual , :Patient ;
+    :hasFeedback :fb_03 ;
+    :isMonitoredBy :dev_smartwatch_01 .
+
+:fb_01 a owl:NamedIndividual , :SymptomFeedback ;
+    :submittedBy :patient_01 ;
+    :mentionsSymptom :symptom_dyspnea ;
+    :hasSentiment :sent_neg_01 ;
+    :hasFeedbackText "Задишка посилилась під час ходьби" ;
+    :hasTimestamp "2026-10-20T10:00:00Z"^^xsd:dateTime .
+
+:fb_02 a owl:NamedIndividual , :ServiceFeedback ;
+    :submittedBy :patient_02 ;
+    :hasSentiment :sent_pos_01 ;
+    :hasFeedbackText "Чудовий догляд медсестри у палаті" ;
+    :hasTimestamp "2026-10-21T11:30:00Z"^^xsd:dateTime .
+
+:fb_03 a owl:NamedIndividual , :SymptomFeedback ;
+    :submittedBy :patient_03 ;
+    :mentionsSymptom :symptom_chest_pain ;
+    :hasSentiment :sent_neg_02 ;
+    :hasTimestamp "2026-10-22T08:15:00Z"^^xsd:dateTime .
+
+:symptom_dyspnea a owl:NamedIndividual , :RespiratorySymptom ;
+    :hasSeverity "Severe" .
+
+:symptom_chest_pain a owl:NamedIndividual , :PainSymptom ;
+    :hasSeverity "Critical" .
+
+:symptom_fever a owl:NamedIndividual , :Symptom ;
+    :hasSeverity "Moderate" .
+
+# Суперечливий індивід (підходить під обидва диз'юнктні класи)
+:sent_neg_01 a owl:NamedIndividual , :NegativeSentiment , :PositiveSentiment ;
+    :hasScore "-0.75"^^xsd:float .
+
+:sent_neg_02 a owl:NamedIndividual , :NegativeSentiment ;
+    :hasScore "-0.90"^^xsd:float .
+
+:sent_pos_01 a owl:NamedIndividual , :PositiveSentiment ;
+    :hasScore "0.85"^^xsd:float .
+
+:dev_pulse_ox_01 a owl:NamedIndividual , :PulseOximeter ;
+    :monitorsPatient :patient_01 ;
+    :measuresVitalSign :vital_spo2_01 ;
+    :hasDeviceID "POX-9921" .
+
+:dev_smartwatch_01 a owl:NamedIndividual , :WearableSensor ;
+    :monitorsPatient :patient_03 ;
+    :measuresVitalSign :vital_hr_01 ;
+    :hasDeviceID "WSR-1044" .
+
+:vital_spo2_01 a owl:NamedIndividual , :OxygenSaturation ;
+    :hasValueNumeric "88.5"^^xsd:double .
+
+:vital_hr_01 a owl:NamedIndividual , :HeartRate ;
+    :hasValueNumeric "125.0"^^xsd:double .
+
+:doc_smith a owl:NamedIndividual , :Doctor ;
+    :treatsPatient :patient_01 .
+
+:nurse_joy a owl:NamedIndividual , :Nurse .
+
+:action_alert_01 a owl:NamedIndividual , :AlertAction ;
+    :triggeredBy :fb_03 .
+
+:action_med_adj_01 a owl:NamedIndividual , :MedicationAdjustment ;
+    :triggeredBy :fb_01 .
+
+:cond_heart_failure a owl:NamedIndividual , :ChronicCondition ;
+    :associatedWithSymptom :symptom_dyspnea .

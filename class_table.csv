@@ -1,0 +1,54 @@
+﻿Column1;Column2;Column3;Column4;Column5;Column6
+SECTION;Class Name;Definition (Genus + Differentia);Parent Class;Key Properties;Source
+CLASSES;Patient;Суб'єкт медичного обслуговування, який отримує допомогу або надає фідбек щодо свого стану;owl:Thing;hasFeedback, hasSymptom;SNOMED CT
+CLASSES;PatientFeedback;Повідомлення, що містить суб'єктивну або об'єктивну оцінку стану здоров'я чи сервісу пацієнтом;owl:Thing;submittedBy, mentionsSymptom, hasSentiment;PROV-O
+CLASSES;SymptomFeedback;Пацієнтський фідбек, який описує фізичні чи психічні прояви захворювання;PatientFeedback;mentionsSymptom, hasSeverity;Custom
+CLASSES;ServiceFeedback;Пацієнтський фідбек, який оцінює якість наданих медичних послуг або роботу персоналу;PatientFeedback;evaluatesService, hasRating;Custom
+CLASSES;Symptom;Медичний стан, який є суб'єктивним або об'єктивним показником відхилення від норми;owl:Thing;hasSeverity, indicatedBy;SNOMED CT
+CLASSES;PainSymptom;Симптом, що характеризується відчуттям дискомфорту або болю в тілі;Symptom;hasIntensity, locatedIn;SNOMED CT
+CLASSES;RespiratorySymptom;Симптом, що пов'язаний із порушеннями у функціонуванні дихальної системи;Symptom;hasFrequency;SNOMED CT
+CLASSES;CardiovascularSymptom;Симптом, який відображає розлади у роботі серцево-судинної системи;Symptom;hasFrequency;SNOMED CT
+CLASSES;VitalSign;Фізіологічний показник, який вимірюється для оцінки життєво важливих функций організму;owl:Thing;hasMeasurementValue, measuredBy;LOINC
+CLASSES;HeartRate;Показник життєдіяльності, що визначає кількість скорочень серця за одиницю часу;VitalSign;hasValueNumeric;LOINC
+CLASSES;BloodPressure;Показник життєдіяльності, який вимірює тиск крові на стінки артерій;VitalSign;hasSystolic, hasDiastolic;LOINC
+CLASSES;BodyTemperature;Показник життєдіяльності, що відображає тепловий стан організму пацієнта;VitalSign;hasValueNumeric;LOINC
+CLASSES;OxygenSaturation;Показник життєдіяльності, який визначає рівень насичення крові киснем;VitalSign;hasValueNumeric;LOINC
+CLASSES;MedicalDevice;Технічний засіб, який використовується для моніторингу або вимірювання стану пацієнта;owl:Thing;measuresVitalSign, hasDeviceID;FHIR
+CLASSES;PulseOximeter;Медичний прилад, призначений для неінвазивного вимірювання рівня кисню та пульсу;MedicalDevice;measuresVitalSign;FHIR
+CLASSES;WearableSensor;Медичний прилад, який носиться на тілі для безперервного збору фізіологічних даних;MedicalDevice;monitorsPatient;FHIR
+CLASSES;Sentiment;Категорія семантичної оцінки, яка відображає емоційне забарвлення тексту фідбеку;owl:Thing;hasScore;Margo Sentiment
+CLASSES;PositiveSentiment;Категорія семантичної оцінки, що виражає задоволення або покращення стану;Sentiment;hasScore;Margo Sentiment
+CLASSES;NegativeSentiment;Категорія семантичної оцінки, що виражає незадоволення, скаргу або погіршення стану;Sentiment;hasScore;Margo Sentiment
+CLASSES;NeutralSentiment;Категорія семантичної оцінки, яка містить констатацію фактів без яскравих емоцій;Sentiment;hasScore;Margo Sentiment
+CLASSES;Action;Медична або адміністративна дія, яка здійснюється у відповідь на отриманий фідбек чи стан;owl:Thing;triggeredBy, assignedTo;FHIR
+CLASSES;AlertAction;Медична дія, що полягає у терміновому сповіщенні чергового лікаря про критичний стан;Action;hasPriority;FHIR
+CLASSES;MedicationAdjustment;Медична дія, яка передбачає зміну дозування або схеми прийому ліків;Action;targetsTreatment;FHIR
+CLASSES;HealthcareProvider;Організація або фахівець, що надає медичні послуги та аналізує фідбеки;owl:Thing;managesPatient;FOAF
+CLASSES;Doctor;Медичний фахівець, який здійснює діагностику, призначає лікування та реагує на фідбеки;HealthcareProvider;treatsPatient;FOAF
+CLASSES;Nurse;Медичний фахівець, який здійснює безпосередній догляд за пацієнтом та первинний моніторинг;HealthcareProvider;assistsDoctor;FOAF
+CLASSES;MedicalCondition;Клінічний стан або патологія, діагностована у пацієнта на основі симптомів та аналізів;owl:Thing;associatedWithSymptom;SNOMED CT
+CLASSES;ChronicCondition;Медичний стан, який триває довготривало та потребує постійного моніторингу;MedicalCondition;requiresMonitoring;SNOMED CT
+CLASSES;AcuteCondition;Медичний стан, який виникає раптово та потребує негайного медичного втручання;MedicalCondition;requiresUrgentAction;SNOMED CT
+CLASSES;MonitoringSituation;Контекстуальна ситуація моніторингу, яка об'єднує стан пацієнта, фідбек та реакцію системи;owl:Thing;hasState, hasEvent;DOLCE/Situation
+SECTION;Property Name;Property Type;Domain;Range;Characteristics
+PROPERTIES;submittedBy;object;PatientFeedback;Patient;Functional
+PROPERTIES;mentionsSymptom;object;PatientFeedback;Symptom;None
+PROPERTIES;hasSentiment;object;PatientFeedback;Sentiment;Functional
+PROPERTIES;monitorsPatient;object;MedicalDevice;Patient;Inverse: isMonitoredBy
+PROPERTIES;isMonitoredBy;object;Patient;MedicalDevice;Inverse: monitorsPatient
+PROPERTIES;treatsPatient;object;Doctor;Patient;None
+PROPERTIES;triggeredBy;object;Action;PatientFeedback;None
+PROPERTIES;measuresVitalSign;object;MedicalDevice;VitalSign;None
+PROPERTIES;associatedWithSymptom;object;MedicalCondition;Symptom;Transitive
+PROPERTIES;hasSeverity;object;Symptom;owl:Thing;None
+PROPERTIES;hasFeedbackText;data;PatientFeedback;xsd:string;None
+PROPERTIES;hasTimestamp;data;PatientFeedback;xsd:dateTime;None
+PROPERTIES;hasScore;data;Sentiment;xsd:float;None
+PROPERTIES;hasValueNumeric;data;VitalSign;xsd:double;None
+PROPERTIES;hasDeviceID;data;MedicalDevice;xsd:string;Functional
+SECTION;Reuse Ontology;Description;Mapping Purpose;-;-
+REUSE;SNOMED CT / LOINC;Міжнародні стандарти медичних термінів та аналізів;Для уніфікації назв симптомів та показників vital signs у класифікації;-;-
+REUSE;FHIR (HL7);Стандарт обміну медичною інформацією;Мапінг класів Patient, MedicalDevice, Action до стандартних ресурсів;-;-
+SECTION;Circular Check Ex 1;Patient;Перевірено: 'Суб'єкт медичного обслуговування...' — не містить слова Patient у визначенні.;PASSED;-
+SECTION;Circular Check Ex 2;PulseOximeter;Перевірено: 'Медичний прилад, призначений для неінвазивного вимірювання...' — рід (MedicalDevice) + відмінність.;PASSED;-
+SECTION;Circular Check Ex 3;PositiveSentiment;Перевірено: 'Категорія семантичної оцінки, що виражає задоволення...' — відсутній тавтологічний зворот.;PASSED;-

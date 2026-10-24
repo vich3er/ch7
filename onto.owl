@@ -1,0 +1,130 @@
+@prefix : <http://www.semanticweb.org/patient_monitoring#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix fhir: <http://hl7.org/fhir/> .
+
+<http://www.semanticweb.org/patient_monitoring> a owl:Ontology ;
+    owl:imports fhir: .
+
+### Classes (32 класи)
+:Patient a owl:Class .
+:PatientFeedback a owl:Class .
+:SymptomFeedback a owl:Class ; rdfs:subClassOf :PatientFeedback .
+:ServiceFeedback a owl:Class ; rdfs:subClassOf :PatientFeedback .
+
+:Symptom a owl:Class .
+:PainSymptom a owl:Class ; rdfs:subClassOf :Symptom .
+:RespiratorySymptom a owl:Class ; rdfs:subClassOf :Symptom .
+:CardiovascularSymptom a owl:Class ; rdfs:subClassOf :Symptom .
+
+:VitalSign a owl:Class .
+:HeartRate a owl:Class ; rdfs:subClassOf :VitalSign .
+:BloodPressure a owl:Class ; rdfs:subClassOf :VitalSign .
+:BodyTemperature a owl:Class ; rdfs:subClassOf :VitalSign .
+:OxygenSaturation a owl:Class ; rdfs:subClassOf :VitalSign .
+
+:MedicalDevice a owl:Class .
+:PulseOximeter a owl:Class ; rdfs:subClassOf :MedicalDevice .
+:WearableSensor a owl:Class ; rdfs:subClassOf :MedicalDevice .
+
+:Sentiment a owl:Class .
+:PositiveSentiment a owl:Class ; rdfs:subClassOf :Sentiment .
+:NegativeSentiment a owl:Class ; rdfs:subClassOf :Sentiment .
+:NeutralSentiment a owl:Class ; rdfs:subClassOf :Sentiment .
+
+:Action a owl:Class .
+:AlertAction a owl:Class ; rdfs:subClassOf :Action .
+:MedicationAdjustment a owl:Class ; rdfs:subClassOf :Action .
+
+:HealthcareProvider a owl:Class .
+:Doctor a owl:Class ; rdfs:subClassOf :HealthcareProvider .
+:Nurse a owl:Class ; rdfs:subClassOf :HealthcareProvider .
+
+:MedicalCondition a owl:Class .
+:ChronicCondition a owl:Class ; rdfs:subClassOf :MedicalCondition .
+:AcuteCondition a owl:Class ; rdfs:subClassOf :MedicalCondition .
+
+:MonitoringSituation a owl:Class .
+:Event a owl:Class .
+:State a owl:Class .
+:Sensor a owl:Class .
+
+:Observation a owl:Class .
+:DiagnosticReport a owl:Class .
+:TreatmentPlan a owl:Class .
+:Therapy a owl:Class .
+:HospitalWard a owl:Class .
+
+### Direct Disjointness (Пряма диз'юнктність)
+:PositiveSentiment owl:disjointWith :NegativeSentiment .
+:PositiveSentiment owl:disjointWith :NeutralSentiment .
+:NegativeSentiment owl:disjointWith :NeutralSentiment .
+:SymptomFeedback owl:disjointWith :ServiceFeedback .
+
+### AllDisjointClasses Axioms
+[] a owl:AllDisjointClasses ;
+    owl:members ( :PositiveSentiment :NegativeSentiment :NeutralSentiment ) .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( :SymptomFeedback :ServiceFeedback ) .
+
+### Restrictions & Axioms
+:Patient rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty :hasFeedback ;
+    owl:someValuesFrom :PatientFeedback
+] .
+
+:SymptomFeedback rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty :mentionsSymptom ;
+    owl:someValuesFrom :Symptom
+] .
+
+:PulseOximeter rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty :measuresVitalSign ;
+    owl:allValuesFrom :OxygenSaturation
+] .
+
+:PatientFeedback rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty :submittedBy ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass :Patient
+] .
+
+:MedicalDevice rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty :hasDeviceID ;
+    owl:minCardinality "1"^^xsd:nonNegativeInteger
+] .
+
+### Object Properties (10 властивостей)
+:hasFeedback a owl:ObjectProperty .
+:submittedBy a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    owl:inverseOf :hasFeedback .
+
+:mentionsSymptom a owl:ObjectProperty .
+:hasSentiment a owl:ObjectProperty ; a owl:FunctionalProperty .
+
+:monitorsPatient a owl:ObjectProperty ;
+    owl:inverseOf :isMonitoredBy .
+:isMonitoredBy a owl:ObjectProperty .
+
+:treatsPatient a owl:ObjectProperty .
+:triggeredBy a owl:ObjectProperty .
+:measuresVitalSign a owl:ObjectProperty .
+:associatedWithSymptom a owl:ObjectProperty ; a owl:TransitiveProperty .
+:hasSeverity a owl:ObjectProperty .
+
+### Data Properties (5 властивостей)
+:hasFeedbackText a owl:DatatypeProperty ; rdfs:domain :PatientFeedback ; rdfs:range xsd:string .
+:hasTimestamp a owl:DatatypeProperty ; rdfs:domain :PatientFeedback ; rdfs:range xsd:dateTime .
+:hasScore a owl:DatatypeProperty ; rdfs:domain :Sentiment ; rdfs:range xsd:float .
+:hasValueNumeric a owl:DatatypeProperty ; rdfs:domain :VitalSign ; rdfs:range xsd:double .
+:hasDeviceID a owl:DatatypeProperty ; rdfs:domain :MedicalDevice ; rdfs:range xsd:string .

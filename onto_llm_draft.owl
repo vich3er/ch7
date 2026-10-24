@@ -1,0 +1,40 @@
+@prefix : <http://www.semanticweb.org/patient_monitoring_llm#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://www.semanticweb.org/patient_monitoring_llm> a owl:Ontology .
+
+### Базові класи, згенеровані LLM (22 класи)
+:Patient a owl:Class .
+:HealthcareProvider a owl:Class .
+:Doctor a owl:Class ; rdfs:subClassOf :HealthcareProvider .
+:Nurse a owl:Class ; rdfs:subClassOf :HealthcareProvider .
+
+:MedicalDevice a owl:Class .
+:VitalSign a owl:Class .
+:HeartRate a owl:Class ; rdfs:subClassOf :VitalSign .
+:BloodPressure a owl:Class ; rdfs:subClassOf :VitalSign .
+
+:Symptom a owl:Class .
+:MedicalCondition a owl:Class .
+:Action a owl:Class .
+:Sentiment a owl:Class .
+
+# Некоректні та надлишкові класи від LLM (без деталізації фідбеків)
+:MedicalReport a owl:Class .
+:DoctorNotes a owl:Class .
+:Prescription a owl:Class .
+:TreatmentHistory a owl:Class .
+
+### Спрощені властивості (без обмежень, Functional/Transitive чи Inverse)
+:monitorsPatient a owl:ObjectProperty .
+:treatsPatient a owl:ObjectProperty .
+:hasSymptom a owl:ObjectProperty .
+:hasVitalSign a owl:ObjectProperty .
+:hasMedicalHistory a owl:ObjectProperty .
+
+:hasAge a owl:DatatypeProperty .
+:hasValueNumeric a owl:DatatypeProperty .
